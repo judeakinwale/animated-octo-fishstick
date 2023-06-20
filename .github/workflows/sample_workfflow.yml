@@ -11,6 +11,9 @@ on:
       - "main"
       - "ci"
 
+env:
+  IMAGE_NAME: ci_cd_demo
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -76,6 +79,21 @@ jobs:
           push: true
           tags: judeakinwale/ci-cd-demo:latest
       # For Setting Up Docker
+
+      # For Azure Container Registry
+      - name: Login to Azure Container Registry using Docker
+        run: docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password ${{ secrets.REGISTRY_PASSWORD }}
+      
+      - name: Build the Docker image
+        # run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        
+      - name: Tag the Docker Image
+        run: docker tag $IMAGE_NAME ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME
+        
+      - name: Push the Docker Image to Azure Container Registry
+        run: docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME
+      # For Azure Container Registry
       
 
 
