@@ -41,11 +41,11 @@ jobs:
       - name: Build artifact
         run: npm run build --if-present
 
-      # - name: Build application artifact
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: ci-cd-artifact
-      #     path: .
+      - name: Build application artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ci-cd-artifact
+          path: .
 
       # For Setting Up Docker
       - name: Set up QEMU
@@ -76,7 +76,6 @@ jobs:
         run: docker login ${{ secrets.REGISTRY_LOGIN_SERVER }} --username ${{ secrets.REGISTRY_USERNAME }} --password ${{ secrets.REGISTRY_PASSWORD }}
       
       - name: Build the Docker image
-        # run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
         run: docker build . --file Dockerfile --tag $IMAGE_NAME
         
       - name: Tag the Docker Image
